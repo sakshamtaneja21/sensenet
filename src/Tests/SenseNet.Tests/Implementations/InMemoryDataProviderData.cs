@@ -1077,6 +1077,9 @@
 		<PropertyType itemID='1' name='Binary' dataType='Binary' mapping='0' />
         <PropertyType itemID='2' name='VersioningMode' dataType='Int' mapping='0' />
 		<PropertyType itemID='8' name='AllowedChildTypes' dataType='Text' mapping='1' />
+        <PropertyType itemID='9' name='TrashDisabled' dataType='Int' mapping='5' />
+        <PropertyType itemID='18' name='IsTaggable' dataType='Int' mapping='7' />
+        <PropertyType itemID='20' name='IsRateable' dataType='Int' mapping='8' />
         <PropertyType itemID='72' name='Members' dataType='Reference' mapping='8' />
 		<PropertyType itemID='129' name='Enabled' dataType='Int' mapping='34' />
 		<PropertyType itemID='130' name='Domain' dataType='String' mapping='44' />
@@ -1093,6 +1096,9 @@
 		<NodeType itemID='10' name='GenericContent' className='SenseNet.ContentRepository.GenericContent'>
             <PropertyType name='VersioningMode' />
 			<PropertyType name='AllowedChildTypes' />
+            <PropertyType name='TrashDisabled' />
+            <PropertyType name='IsTaggable' />
+            <PropertyType name='IsRateable' />
 			<NodeType itemID='3' name='User' className='SenseNet.ContentRepository.User'>
 				<PropertyType name='Enabled' />
 				<PropertyType name='Domain' />
@@ -1167,8 +1173,129 @@
 <StorageSchema xmlns='http://schemas.sensenet.com/SenseNet/ContentRepository/Storage/Schema'>
 	<UsedPropertyTypes>
 		<PropertyType itemID='1' name='Binary' dataType='Binary' mapping='0' />
+		<PropertyType itemID='2' name='VersioningMode' dataType='Int' mapping='0' />
 		<PropertyType itemID='3' name='Description' dataType='Text' mapping='0' />
+		<PropertyType itemID='4' name='Hidden' dataType='Int' mapping='1' />
+		<PropertyType itemID='5' name='InheritableVersioningMode' dataType='Int' mapping='2' />
+		<PropertyType itemID='6' name='ApprovingMode' dataType='Int' mapping='3' />
+		<PropertyType itemID='7' name='InheritableApprovingMode' dataType='Int' mapping='4' />
+		<PropertyType itemID='8' name='AllowedChildTypes' dataType='Text' mapping='1' />
+		<PropertyType itemID='9' name='TrashDisabled' dataType='Int' mapping='5' />
+		<PropertyType itemID='10' name='EnableLifespan' dataType='Int' mapping='6' />
+		<PropertyType itemID='11' name='ValidFrom' dataType='DateTime' mapping='0' />
+		<PropertyType itemID='12' name='ValidTill' dataType='DateTime' mapping='1' />
+		<PropertyType itemID='13' name='Aspects' dataType='Reference' mapping='0' />
+		<PropertyType itemID='14' name='AspectData' dataType='Text' mapping='2' />
+		<PropertyType itemID='15' name='BrowseApplication' dataType='Reference' mapping='1' />
+		<PropertyType itemID='16' name='ExtensionData' dataType='Text' mapping='3' />
+		<PropertyType itemID='17' name='IsTaggable' dataType='Int' mapping='7' />
+		<PropertyType itemID='18' name='Tags' dataType='Text' mapping='4' />
+		<PropertyType itemID='19' name='IsRateable' dataType='Int' mapping='8' />
+		<PropertyType itemID='20' name='RateStr' dataType='String' mapping='0' />
+		<PropertyType itemID='21' name='RateAvg' dataType='Currency' mapping='0' />
+		<PropertyType itemID='22' name='RateCount' dataType='Int' mapping='9' />
+		<PropertyType itemID='23' name='CheckInComments' dataType='Text' mapping='5' />
+		<PropertyType itemID='24' name='RejectReason' dataType='Text' mapping='6' />
+		<PropertyType itemID='25' name='AppName' dataType='String' mapping='1' />
+		<PropertyType itemID='26' name='Disabled' dataType='Int' mapping='10' />
+		<PropertyType itemID='27' name='IsModal' dataType='Int' mapping='11' />
+		<PropertyType itemID='28' name='Clear' dataType='Int' mapping='12' />
+		<PropertyType itemID='29' name='Scenario' dataType='String' mapping='2' />
+		<PropertyType itemID='30' name='ActionTypeName' dataType='String' mapping='3' />
+		<PropertyType itemID='31' name='StyleHint' dataType='String' mapping='4' />
+		<PropertyType itemID='32' name='RequiredPermissions' dataType='String' mapping='5' />
+		<PropertyType itemID='33' name='DeepPermissionCheck' dataType='Int' mapping='13' />
+		<PropertyType itemID='34' name='IncludeBackUrl' dataType='String' mapping='6' />
+		<PropertyType itemID='35' name='CacheControl' dataType='String' mapping='7' />
+		<PropertyType itemID='36' name='MaxAge' dataType='String' mapping='8' />
+		<PropertyType itemID='37' name='CustomUrlParameters' dataType='String' mapping='9' />
+		<PropertyType itemID='38' name='StoredIcon' dataType='String' mapping='10' />
+		<PropertyType itemID='39' name='ContentListBindings' dataType='Text' mapping='7' />
+		<PropertyType itemID='40' name='ContentListDefinition' dataType='Text' mapping='8' />
+		<PropertyType itemID='41' name='DefaultView' dataType='String' mapping='11' />
+		<PropertyType itemID='42' name='AvailableViews' dataType='Reference' mapping='2' />
+		<PropertyType itemID='43' name='AvailableContentTypeFields' dataType='Reference' mapping='3' />
+		<PropertyType itemID='44' name='ListEmail' dataType='String' mapping='12' />
+		<PropertyType itemID='45' name='ExchangeSubscriptionId' dataType='String' mapping='13' />
+		<PropertyType itemID='46' name='OverwriteFiles' dataType='Int' mapping='14' />
+		<PropertyType itemID='47' name='GroupAttachments' dataType='String' mapping='14' />
+		<PropertyType itemID='48' name='SaveOriginalEmail' dataType='Int' mapping='15' />
+		<PropertyType itemID='49' name='IncomingEmailWorkflow' dataType='Reference' mapping='4' />
+		<PropertyType itemID='50' name='OnlyFromLocalGroups' dataType='Int' mapping='16' />
+		<PropertyType itemID='51' name='InboxFolder' dataType='String' mapping='15' />
+		<PropertyType itemID='52' name='OwnerWhenVisitor' dataType='Reference' mapping='5' />
+		<PropertyType itemID='53' name='AspectDefinition' dataType='Text' mapping='9' />
+		<PropertyType itemID='54' name='FieldSettingContents' dataType='Reference' mapping='6' />
+		<PropertyType itemID='55' name='Link' dataType='Reference' mapping='7' />
+		<PropertyType itemID='56' name='WorkflowsRunning' dataType='Int' mapping='17' />
+		<PropertyType itemID='57' name='UserAgentPattern' dataType='String' mapping='16' />
+		<PropertyType itemID='58' name='SyncGuid' dataType='String' mapping='17' />
+		<PropertyType itemID='59' name='LastSync' dataType='DateTime' mapping='2' />
+		<PropertyType itemID='60' name='Watermark' dataType='String' mapping='18' />
+		<PropertyType itemID='61' name='PageCount' dataType='Int' mapping='18' />
+		<PropertyType itemID='62' name='MimeType' dataType='String' mapping='19' />
+		<PropertyType itemID='63' name='Shapes' dataType='Text' mapping='10' />
+		<PropertyType itemID='64' name='PageAttributes' dataType='Text' mapping='11' />
+		<PropertyType itemID='65' name='From' dataType='String' mapping='20' />
+		<PropertyType itemID='66' name='Body' dataType='Text' mapping='12' />
+		<PropertyType itemID='67' name='Sent' dataType='DateTime' mapping='3' />
+		<PropertyType itemID='68' name='ClassName' dataType='String' mapping='21' />
+		<PropertyType itemID='69' name='MethodName' dataType='String' mapping='22' />
+		<PropertyType itemID='70' name='Parameters' dataType='Text' mapping='13' />
 		<PropertyType itemID='71' name='Members' dataType='Reference' mapping='8' />
+		<PropertyType itemID='72' name='StatusCode' dataType='String' mapping='23' />
+		<PropertyType itemID='73' name='RedirectUrl' dataType='String' mapping='24' />
+		<PropertyType itemID='74' name='Width' dataType='Int' mapping='19' />
+		<PropertyType itemID='75' name='Height' dataType='Int' mapping='20' />
+		<PropertyType itemID='76' name='Keywords' dataType='Text' mapping='14' />
+		<PropertyType itemID='77' name='DateTaken' dataType='DateTime' mapping='4' />
+		<PropertyType itemID='78' name='CoverImage' dataType='Reference' mapping='9' />
+		<PropertyType itemID='79' name='ImageType' dataType='String' mapping='25' />
+		<PropertyType itemID='80' name='ImageFieldName' dataType='String' mapping='26' />
+		<PropertyType itemID='81' name='Stretch' dataType='Int' mapping='21' />
+		<PropertyType itemID='82' name='OutputFormat' dataType='String' mapping='27' />
+		<PropertyType itemID='83' name='SmoothingMode' dataType='String' mapping='28' />
+		<PropertyType itemID='84' name='InterpolationMode' dataType='String' mapping='29' />
+		<PropertyType itemID='85' name='PixelOffsetMode' dataType='String' mapping='30' />
+		<PropertyType itemID='86' name='ResizeTypeMode' dataType='String' mapping='31' />
+		<PropertyType itemID='87' name='CropVAlign' dataType='String' mapping='32' />
+		<PropertyType itemID='88' name='CropHAlign' dataType='String' mapping='33' />
+		<PropertyType itemID='89' name='GlobalOnly' dataType='Int' mapping='22' />
+		<PropertyType itemID='90' name='Date' dataType='DateTime' mapping='5' />
+		<PropertyType itemID='91' name='MemoType' dataType='String' mapping='34' />
+		<PropertyType itemID='92' name='SeeAlso' dataType='Reference' mapping='10' />
+		<PropertyType itemID='93' name='Query' dataType='Text' mapping='15' />
+		<PropertyType itemID='94' name='Downloads' dataType='Currency' mapping='1' />
+		<PropertyType itemID='95' name='IsActive' dataType='Int' mapping='23' />
+		<PropertyType itemID='96' name='IsWallContainer' dataType='Int' mapping='24' />
+		<PropertyType itemID='97' name='WorkspaceSkin' dataType='Reference' mapping='11' />
+		<PropertyType itemID='98' name='Manager' dataType='Reference' mapping='12' />
+		<PropertyType itemID='99' name='Deadline' dataType='DateTime' mapping='6' />
+		<PropertyType itemID='100' name='IsCritical' dataType='Int' mapping='25' />
+		<PropertyType itemID='101' name='PendingUserLang' dataType='String' mapping='35' />
+		<PropertyType itemID='102' name='Language' dataType='String' mapping='36' />
+		<PropertyType itemID='103' name='EnableClientBasedCulture' dataType='Int' mapping='26' />
+		<PropertyType itemID='104' name='EnableUserBasedCulture' dataType='Int' mapping='27' />
+		<PropertyType itemID='105' name='UrlList' dataType='Text' mapping='16' />
+		<PropertyType itemID='106' name='StartPage' dataType='Reference' mapping='13' />
+		<PropertyType itemID='107' name='LoginPage' dataType='Reference' mapping='14' />
+		<PropertyType itemID='108' name='SiteSkin' dataType='Reference' mapping='15' />
+		<PropertyType itemID='109' name='DenyCrossSiteAccess' dataType='Int' mapping='28' />
+		<PropertyType itemID='110' name='EnableAutofilters' dataType='String' mapping='37' />
+		<PropertyType itemID='111' name='EnableLifespanFilter' dataType='String' mapping='38' />
+		<PropertyType itemID='112' name='StartDate' dataType='DateTime' mapping='7' />
+		<PropertyType itemID='113' name='DueDate' dataType='DateTime' mapping='8' />
+		<PropertyType itemID='114' name='AssignedTo' dataType='Reference' mapping='16' />
+		<PropertyType itemID='115' name='Priority' dataType='String' mapping='39' />
+		<PropertyType itemID='116' name='Status' dataType='String' mapping='40' />
+		<PropertyType itemID='117' name='TaskCompletion' dataType='Int' mapping='29' />
+		<PropertyType itemID='118' name='KeepUntil' dataType='DateTime' mapping='9' />
+		<PropertyType itemID='119' name='OriginalPath' dataType='String' mapping='41' />
+		<PropertyType itemID='120' name='WorkspaceId' dataType='Int' mapping='30' />
+		<PropertyType itemID='121' name='WorkspaceRelativePath' dataType='String' mapping='42' />
+		<PropertyType itemID='122' name='MinRetentionTime' dataType='Int' mapping='31' />
+		<PropertyType itemID='123' name='SizeQuota' dataType='Int' mapping='32' />
+		<PropertyType itemID='124' name='BagCapacity' dataType='Int' mapping='33' />
 		<PropertyType itemID='125' name='Enabled' dataType='Int' mapping='34' />
 		<PropertyType itemID='126' name='Domain' dataType='String' mapping='43' />
 		<PropertyType itemID='127' name='Email' dataType='String' mapping='44' />
@@ -1176,16 +1303,68 @@
 		<PropertyType itemID='129' name='OldPasswords' dataType='Text' mapping='17' />
 		<PropertyType itemID='130' name='PasswordHash' dataType='String' mapping='46' />
 		<PropertyType itemID='131' name='LoginName' dataType='String' mapping='47' />
+		<PropertyType itemID='132' name='Profile' dataType='Reference' mapping='17' />
+		<PropertyType itemID='133' name='FollowedWorkspaces' dataType='Reference' mapping='18' />
+		<PropertyType itemID='134' name='JobTitle' dataType='String' mapping='48' />
 		<PropertyType itemID='135' name='ImageRef' dataType='Reference' mapping='19' />
-		<PropertyType itemID='136' name='ImageData' dataType='Binary' mapping='1' />        
+		<PropertyType itemID='136' name='ImageData' dataType='Binary' mapping='1' />
+		<PropertyType itemID='137' name='Captcha' dataType='String' mapping='49' />
+		<PropertyType itemID='138' name='Department' dataType='String' mapping='50' />
+		<PropertyType itemID='139' name='Languages' dataType='String' mapping='51' />
+		<PropertyType itemID='140' name='Phone' dataType='String' mapping='52' />
+		<PropertyType itemID='141' name='Gender' dataType='String' mapping='53' />
+		<PropertyType itemID='142' name='MaritalStatus' dataType='String' mapping='54' />
+		<PropertyType itemID='143' name='BirthDate' dataType='DateTime' mapping='10' />
+		<PropertyType itemID='144' name='Education' dataType='Text' mapping='18' />
+		<PropertyType itemID='145' name='TwitterAccount' dataType='String' mapping='55' />
+		<PropertyType itemID='146' name='FacebookURL' dataType='String' mapping='56' />
+		<PropertyType itemID='147' name='LinkedInURL' dataType='String' mapping='57' />
+		<PropertyType itemID='148' name='LastLoggedOut' dataType='DateTime' mapping='11' />
 	</UsedPropertyTypes>
 	<NodeTypeHierarchy>
 		<NodeType itemID='10' name='GenericContent' className='SenseNet.ContentRepository.GenericContent'>
+			<PropertyType name='VersioningMode' />
 			<PropertyType name='Description' />
+			<PropertyType name='Hidden' />
+			<PropertyType name='InheritableVersioningMode' />
+			<PropertyType name='ApprovingMode' />
+			<PropertyType name='InheritableApprovingMode' />
 			<PropertyType name='AllowedChildTypes' />
+			<PropertyType name='TrashDisabled' />
+			<PropertyType name='EnableLifespan' />
+			<PropertyType name='ValidFrom' />
+			<PropertyType name='ValidTill' />
+			<PropertyType name='Aspects' />
+			<PropertyType name='AspectData' />
+			<PropertyType name='BrowseApplication' />
+			<PropertyType name='ExtensionData' />
+			<PropertyType name='IsTaggable' />
+			<PropertyType name='Tags' />
+			<PropertyType name='IsRateable' />
+			<PropertyType name='RateStr' />
+			<PropertyType name='RateAvg' />
+			<PropertyType name='RateCount' />
+			<PropertyType name='CheckInComments' />
+			<PropertyType name='RejectReason' />
 			<NodeType itemID='3' name='User' className='SenseNet.ContentRepository.User'>
+				<PropertyType name='VersioningMode' />
 				<PropertyType name='Description' />
+				<PropertyType name='Hidden' />
+				<PropertyType name='InheritableVersioningMode' />
+				<PropertyType name='ApprovingMode' />
+				<PropertyType name='InheritableApprovingMode' />
+				<PropertyType name='AllowedChildTypes' />
+				<PropertyType name='TrashDisabled' />
+				<PropertyType name='EnableLifespan' />
+				<PropertyType name='ValidFrom' />
+				<PropertyType name='ValidTill' />
+				<PropertyType name='Aspects' />
+				<PropertyType name='AspectData' />
+				<PropertyType name='BrowseApplication' />
+				<PropertyType name='SyncGuid' />
+				<PropertyType name='LastSync' />
 				<PropertyType name='Manager' />
+				<PropertyType name='Language' />
 				<PropertyType name='Enabled' />
 				<PropertyType name='Domain' />
 				<PropertyType name='Email' />
@@ -1193,20 +1372,83 @@
 				<PropertyType name='OldPasswords' />
 				<PropertyType name='PasswordHash' />
 				<PropertyType name='LoginName' />
+				<PropertyType name='Profile' />
+				<PropertyType name='FollowedWorkspaces' />
+				<PropertyType name='JobTitle' />
+				<PropertyType name='ImageRef' />
+				<PropertyType name='ImageData' />
+				<PropertyType name='Captcha' />
+				<PropertyType name='Department' />
+				<PropertyType name='Languages' />
+				<PropertyType name='Phone' />
+				<PropertyType name='Gender' />
+				<PropertyType name='MaritalStatus' />
+				<PropertyType name='BirthDate' />
+				<PropertyType name='Education' />
+				<PropertyType name='TwitterAccount' />
+				<PropertyType name='FacebookURL' />
+				<PropertyType name='LinkedInURL' />
+				<PropertyType name='LastLoggedOut' />
 			</NodeType>
 			<NodeType itemID='2' name='Group' className='SenseNet.ContentRepository.Group'>
+				<PropertyType name='VersioningMode' />
 				<PropertyType name='Description' />
+				<PropertyType name='Hidden' />
+				<PropertyType name='InheritableVersioningMode' />
+				<PropertyType name='ApprovingMode' />
+				<PropertyType name='InheritableApprovingMode' />
+				<PropertyType name='AllowedChildTypes' />
+				<PropertyType name='TrashDisabled' />
+				<PropertyType name='EnableLifespan' />
+				<PropertyType name='ValidFrom' />
+				<PropertyType name='ValidTill' />
+				<PropertyType name='Aspects' />
+				<PropertyType name='AspectData' />
+				<PropertyType name='BrowseApplication' />
+				<PropertyType name='SyncGuid' />
+				<PropertyType name='LastSync' />
 				<PropertyType name='Members' />
 			</NodeType>
 			<NodeType itemID='1' name='Folder' className='SenseNet.ContentRepository.Folder'>
+				<PropertyType name='VersioningMode' />
 				<PropertyType name='Description' />
+				<PropertyType name='Hidden' />
+				<PropertyType name='InheritableVersioningMode' />
+				<PropertyType name='ApprovingMode' />
+				<PropertyType name='InheritableApprovingMode' />
+				<PropertyType name='TrashDisabled' />
+				<PropertyType name='EnableLifespan' />
+				<PropertyType name='ValidFrom' />
+				<PropertyType name='ValidTill' />
+				<PropertyType name='Aspects' />
+				<PropertyType name='AspectData' />
+				<PropertyType name='BrowseApplication' />
+				<NodeType itemID='8' name='OrganizationalUnit' className='SenseNet.ContentRepository.OrganizationalUnit'>
+					<PropertyType name='SyncGuid' />
+					<PropertyType name='LastSync' />
+				</NodeType>
 				<NodeType itemID='7' name='Domain' className='SenseNet.ContentRepository.Domain'>
+					<PropertyType name='SyncGuid' />
+					<PropertyType name='LastSync' />
 				</NodeType>
 				<NodeType itemID='6' name='Domains' className='SenseNet.ContentRepository.Folder' />
 				<NodeType itemID='5' name='SystemFolder' className='SenseNet.ContentRepository.SystemFolder'>
+					<NodeType itemID='54' name='Resources' className='SenseNet.ContentRepository.SystemFolder' />
 				</NodeType>
 				<NodeType itemID='4' name='PortalRoot' className='SenseNet.ContentRepository.PortalRoot'>
+					<PropertyType name='VersioningMode' />
 					<PropertyType name='Description' />
+					<PropertyType name='Hidden' />
+					<PropertyType name='InheritableVersioningMode' />
+					<PropertyType name='ApprovingMode' />
+					<PropertyType name='InheritableApprovingMode' />
+					<PropertyType name='TrashDisabled' />
+					<PropertyType name='EnableLifespan' />
+					<PropertyType name='ValidFrom' />
+					<PropertyType name='ValidTill' />
+					<PropertyType name='Aspects' />
+					<PropertyType name='AspectData' />
+					<PropertyType name='BrowseApplication' />
 				</NodeType>
 			</NodeType>
 		</NodeType>
