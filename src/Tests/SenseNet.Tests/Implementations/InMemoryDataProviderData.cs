@@ -220,10 +220,8 @@
 34	text/xml	Group	.ContentType	1939
 49	text/xml	OrganizationalUnit	.ContentType	2060
 52	text/xml	PortalRoot	.ContentType	759
-59	text/xml	SystemFile	.ContentType	590
 61	text/xml	SystemFolder	.ContentType	590
 74	text/xml	User	.ContentType	13605
-88	image/png	Admin	.png	731
 ";
         #endregion
 
