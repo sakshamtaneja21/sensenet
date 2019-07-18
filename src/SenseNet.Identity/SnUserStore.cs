@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using SenseNet.ContentRepository;
 using SenseNet.ContentRepository.Storage;
 using SenseNet.ContentRepository.Storage.Security;
+using SenseNet.Diagnostics;
 using SenseNet.Search;
 using Task = System.Threading.Tasks.Task;
 
@@ -13,6 +14,38 @@ namespace SenseNet.Identity
 {
     public class SnUserStore : IUserPasswordStore<SnIdentityUser>, IUserEmailStore<SnIdentityUser>
     {
+        #region Properties
+        private Func<SnIdentityUser, Task<Node>> GetParentAsync { get; }
+        private Func<User, Task<Group[]>> GetGroupsAsync { get; }
+
+        private const string DefaultParentPath = "/Root/IMS/BuiltIn/Portal";
+        #endregion
+
+        #region Constructors
+        public SnUserStore()
+        {
+            GetParentAsync = user => LoadOrCreateParentAsync(DefaultParentPath);
+            GetGroupsAsync = user => Task.FromResult(new Group[0]);
+        }
+        public SnUserStore(Func<SnIdentityUser, Task<Node>> getParentCallback)
+        {
+            GetParentAsync = getParentCallback ?? throw new ArgumentNullException(nameof(getParentCallback));
+            GetGroupsAsync = user => Task.FromResult(new Group[0]);
+        }
+        public SnUserStore(Func<SnIdentityUser, Task<Node>> getParentCallback, Func<User, Task<Group[]>> getGroupsCallback)
+        {
+            GetParentAsync = getParentCallback ?? throw new ArgumentNullException(nameof(getParentCallback));
+            GetGroupsAsync = getGroupsCallback ?? throw new ArgumentNullException(nameof(getGroupsCallback));
+        }
+        public SnUserStore(string parentPath, string[] groupPaths = null)
+        {
+            var groupPathsLocal = groupPaths ?? new string[0];
+
+            GetParentAsync = user => LoadOrCreateParentAsync(parentPath);
+            GetGroupsAsync = user => Task.FromResult(groupPathsLocal.Select(Node.Load<Group>).ToArray());
+        }
+        #endregion
+
         #region IUserStore<SnIdentityUser> members
         public Task<string> GetUserIdAsync(SnIdentityUser user, CancellationToken cancellationToken)
         {
@@ -51,13 +84,14 @@ namespace SenseNet.Identity
             return Task.CompletedTask;
         }
 
-        public Task<IdentityResult> CreateAsync(SnIdentityUser user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(SnIdentityUser user, CancellationToken cancellationToken)
         {
             using (new SystemAccount())
             {
                 var name = ContentNamingProvider.GetNameFromDisplayName(user.UserName);
+                var parent = await GetParentAsync(user);
 
-                var content = Content.CreateNew("User", Node.LoadNode("/Root/IMS/BuiltIn/Portal"), name);
+                var content = Content.CreateNew("User", parent, name);
                 content["DisplayName"] = user.UserName;
                 content["LoginName"] = user.UserName;
                 content["Email"] = user.Email;
@@ -66,11 +100,20 @@ namespace SenseNet.Identity
 
                 user.Id = content.Id;
 
-                //UNDONE: every user is administrator now
-                Group.Administrators.AddMember(content.ContentHandler as User);
+                foreach (var group in await GetGroupsAsync(content.ContentHandler as User))
+                {
+                    try
+                    {
+                        group?.AddMember(content.ContentHandler as User);
+                    }
+                    catch (Exception e)
+                    {
+                        SnLog.WriteException(e, $"Error during adding new user {content.Id} ({user.UserName}) to group {group?.Path}.");
+                    }
+                }
             }
 
-            return Task.FromResult(IdentityResult.Success);
+            return IdentityResult.Success;
         }
 
         public Task<IdentityResult> UpdateAsync(SnIdentityUser user, CancellationToken cancellationToken)
@@ -179,5 +222,15 @@ namespace SenseNet.Identity
         public void Dispose()
         {
         }
+
+        #region Helper methods
+
+        private static Task<Node> LoadOrCreateParentAsync(string parentPath)
+        {
+            var parent = RepositoryTools.CreateStructure(parentPath, "OrganizationalUnit");
+            return Task.FromResult(parent?.ContentHandler ?? Node.LoadNode(parentPath));
+        }
+
+        #endregion
     }
 }

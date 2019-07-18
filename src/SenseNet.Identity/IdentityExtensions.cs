@@ -1,26 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using SenseNet.ContentRepository;
+using SenseNet.ContentRepository.Storage;
 
 namespace SenseNet.Identity
 {
     public static class IdentityExtensions
     {
-        public static IdentityBuilder AddSenseNetIdentity(this IServiceCollection services)
+        public static IdentityBuilder AddSenseNetIdentity(this IServiceCollection services, string parentPath, string[] groupPaths = null)
         {
-            //UNDONE: read configuration and provide values to instances
-            //- or pass on a whole IConfiguration object
-            //- or let them use the SnConfig API
-            services.AddSingleton<IUserStore<SnIdentityUser>>(new SnUserStore());
+            var store = new SnUserStore(parentPath, groupPaths);
+
+            return services.AddSenseNetIdentity(store);
+        }
+        public static IdentityBuilder AddSenseNetIdentity(this IServiceCollection services, Func<SnIdentityUser, Task<Node>> getParentCallback)
+        {
+            var store = new SnUserStore(getParentCallback);
+
+            return services.AddSenseNetIdentity(store);
+        }
+        public static IdentityBuilder AddSenseNetIdentity(this IServiceCollection services,
+            Func<SnIdentityUser, Task<Node>> getParentCallback,
+            Func<User, Task<Group[]>> getGroupsCallback)
+        {
+            var store = new SnUserStore(getParentCallback, getGroupsCallback);
+
+            return services.AddSenseNetIdentity(store);
+        }
+
+        public static IdentityBuilder AddSenseNetIdentity(this IServiceCollection services, SnUserStore userStore = null)
+        {
+            services.AddSingleton<IUserStore<SnIdentityUser>>(userStore ?? new SnUserStore());
             services.AddSingleton<IRoleStore<SnIdentityRole>>(new SnRoleStore());
 
-            //These thingz are configured by AddIdentity below.
-            //services.AddScoped<SignInManager<SnIdentityUser>, SignInManager<SnIdentityUser>>();
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            //SignInManager and HttpContextAccessor are configured by AddIdentity below.
             return services.AddIdentity<SnIdentityUser, SnIdentityRole>()
                 .AddDefaultTokenProviders();
         }
