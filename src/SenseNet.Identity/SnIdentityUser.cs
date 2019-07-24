@@ -15,7 +15,9 @@ namespace SenseNet.Identity
                 Id = user.Id,
                 PasswordHash = user.PasswordHash,
                 UserName = user.LoginName,
+                NormalizedUserName = user.LoginName,
                 Email = user.Email,
+                NormalizedEmail = user.Email,
                 EmailConfirmed = true
             };
         }

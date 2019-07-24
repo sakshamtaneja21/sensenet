@@ -200,7 +200,8 @@ namespace SenseNet.Identity
 
         public Task<SnIdentityUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            var user = SystemAccount.Execute(() => ContentQuery.Query($"+TypeIs:User +Email:'{normalizedEmail}'")
+            var user = SystemAccount.Execute(() => ContentQuery
+                .Query(IdentityQueries.UsersByEmail, QuerySettings.AdminSettings, normalizedEmail)
                 .Nodes.FirstOrDefault() as User);
 
             return Task.FromResult(SnIdentityUser.FromUser(user));
@@ -208,7 +209,7 @@ namespace SenseNet.Identity
 
         public Task<string> GetNormalizedEmailAsync(SnIdentityUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.Email);
+            return Task.FromResult(user.NormalizedEmail);
         }
 
         public Task SetNormalizedEmailAsync(SnIdentityUser user, string normalizedEmail, CancellationToken cancellationToken)
