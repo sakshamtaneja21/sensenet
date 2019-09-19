@@ -20,8 +20,8 @@ namespace SenseNet.ContentRepository.Storage.Data
         [Obsolete("Use Configuration.Common.IsWebEnvironment instead.")]
         public static bool IsWebEnvironment => Configuration.Common.IsWebEnvironment;
 
-        [Obsolete("Use Configuration.Data.SqlCommandTimeout instead.")]
-        public static int SqlCommandTimeout => Configuration.Data.SqlCommandTimeout;
+        [Obsolete("Use Configuration.Data.DbCommandTimeout instead.", true)]
+        public static int SqlCommandTimeout => Configuration.Data.DbCommandTimeout;
         [Obsolete("Use Configuration.Data.TransactionTimeout instead.")]
         public static double TransactionTimeout => Configuration.Data.TransactionTimeout;
         [Obsolete("Use Configuration.Data.LongTransactionTimeout instead.")]
@@ -124,12 +124,12 @@ namespace SenseNet.ContentRepository.Storage.Data
 
         #region SECTION: Cache MOVED
 
-        public static Cache.CacheContentAfterSaveOption CacheContentAfterSaveMode => Cache.CacheContentAfterSaveMode;
+        public static CacheConfiguration.CacheContentAfterSaveOption CacheContentAfterSaveMode => CacheConfiguration.CacheContentAfterSaveMode;
 
-        public static int NodeIdDependencyEventPartitions => Cache.NodeIdDependencyEventPartitions;
-        public static int NodeTypeDependencyEventPartitions => Cache.NodeTypeDependencyEventPartitions;
-        public static int PathDependencyEventPartitions => Cache.PathDependencyEventPartitions;
-        public static int PortletDependencyEventPartitions => Cache.PortletDependencyEventPartitions;
+        public static int NodeIdDependencyEventPartitions => CacheConfiguration.NodeIdDependencyEventPartitions;
+        public static int NodeTypeDependencyEventPartitions => CacheConfiguration.NodeTypeDependencyEventPartitions;
+        public static int PathDependencyEventPartitions => CacheConfiguration.PathDependencyEventPartitions;
+        public static int PortletDependencyEventPartitions => CacheConfiguration.PortletDependencyEventPartitions;
 
         #endregion
 
@@ -179,44 +179,11 @@ namespace SenseNet.ContentRepository.Storage.Data
 
 
         #region Helper methods
-
-        private static string GetStringValue(string sectionName, string key, string defaultValue = null)
-        {
-            string configValue = null;
-
-            var section = ConfigurationManager.GetSection(sectionName) as NameValueCollection;
-            if (section != null)
-                configValue = section[key];
-            
-            // backward compatibility: fallback to the appsettings section
-            if (configValue == null)
-                configValue = ConfigurationManager.AppSettings[key];
-
-            return configValue ?? defaultValue;
-        }
-
+        
         [Obsolete("Use the SnConfig API instead.", true)]
         public static T GetValue<T>(string sectionName, string key, T defaultValue = default(T))
         {
-            var configString = GetStringValue(sectionName, key);
-            if (string.IsNullOrEmpty(configString))
-                return defaultValue;
-
-            try
-            {
-                return Convert<T>(configString);
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
-        }
-        private static T Convert<T>(string value)
-        {
-            if (typeof(T).IsEnum)
-                return (T)Enum.Parse(typeof(T), value);
-
-            return (T)System.Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
+            throw new SnNotSupportedException();
         }
 
         #endregion
